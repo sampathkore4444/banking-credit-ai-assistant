@@ -127,3 +127,14 @@ The Credit Policy Interpretation Assistant is designed to **support Credit Offic
 If you want, I can also **prepare a small diagram/workflow chart** showing **how applicant data flows through the app, DeepSeek, and dashboard**. This is very useful for **internal presentations and auditors**.
 
 Do you want me to create that diagram?
+
+
+
+
+policy text: that we might need to input in the UI (copy below and paste on a streamlit ui field)
+
+- Loans above $50,000 require Credit Committee approval.
+- Maximum Debt-to-Income ratio is 40%.
+- Minimum credit score for standard loans is 650.
+- Collateral must cover at least 80% of the loan amount.
+- Any applicant with past defaults requires Branch Manager approval.

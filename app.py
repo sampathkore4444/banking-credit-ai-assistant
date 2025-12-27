@@ -90,6 +90,15 @@ if submitted:
         st.markdown("**Explanation / Audit Notes:**")
         st.text_area("", result["Explanation"], height=250)
 
+    st.markdown("**Suggested Model Decision:**")
+    decision = result.get("Suggested Decision", "N/A")
+    if decision.lower() == "approve":
+        st.success(decision)
+    elif decision.lower() == "reject":
+        st.error(decision)
+    else:
+        st.warning(decision)  # Think More / Escalate
+
     # Full raw DeepSeek output (optional)
     with st.expander("Raw DeepSeek Output"):
         st.text(deepseek_text)
