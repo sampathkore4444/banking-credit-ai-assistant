@@ -3,7 +3,7 @@ import streamlit as st
 from credit_assistant_core import generate_policy_advice, parse_deepseek_output
 
 st.set_page_config(page_title="Credit Policy Interpretation Assistant", layout="wide")
-st.title("🏦 Credit Policy Interpretation Assistant (DeepSeek-R1 8B)")
+st.title("🏦 Credit Policy Interpretation Assistant")
 
 # ---------------------------
 # Input Form

@@ -1,8 +1,6 @@
 # credit_assistant_core.py
-from ollama import Ollama
-
-# Initialize Ollama client
-client = Ollama()
+import ollama
+import re
 
 
 def generate_policy_advice(application, policy_text=""):
@@ -41,7 +39,20 @@ Output in structured form:
 """
 
     # Call DeepSeek-R1:8B via Ollama
-    response = client.chat(
+    response = ollama.chat(
         model="deepseek-r1:8b", messages=[{"role": "user", "content": prompt}]
     )
-    return response.content
+    return response["message"]["content"]
+
+
+def parse_deepseek_output(text):
+    """
+    Parse DeepSeek structured output into a dictionary
+    """
+    result = {"Exceptions": "", "Risks": "", "Required Approval": "", "Explanation": ""}
+    for key in result.keys():
+        pattern = rf"{key}:(.*?)(?:- [A-Z]|$)"
+        match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+        if match:
+            result[key] = match.group(1).strip()
+    return result
