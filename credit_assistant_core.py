@@ -5,8 +5,15 @@ import re
 
 def generate_policy_advice(application, policy_text=""):
     """
-    Generate explainable risk guidance using Ollama DeepSeek-R1:8B
+    Generate explainable risk guidance using Ollama DeepSeek-R1:8B,
+    including Debt-to-Income (DTI) ratio.
     """
+
+    # Calculate DTI
+    monthly_income = application.get("monthly_income", 1)
+    total_monthly_debt = application.get("total_monthly_debt", 0)
+    dti = round((total_monthly_debt / monthly_income) * 100, 2)
+
     prompt = f"""
 You are a Credit Policy Interpretation Assistant for a bank.
 You do NOT make final approval/rejection decisions.
@@ -17,6 +24,7 @@ Loan Application:
 - Term (Months): {application['term_months']}
 - Monthly Income: ${application['monthly_income']}
 - Total Monthly Debt: ${application['total_monthly_debt']}
+- Debt-to-Income (DTI): {dti}%
 - Credit Score: {application['credit_score']}
 - Collateral: {application['collateral']}
 - Past Defaults: {application['past_defaults']}
@@ -26,7 +34,7 @@ Bank Policy:
 
 Tasks:
 1. Highlight any potential policy exceptions.
-2. Flag risks or concerns.
+2. Flag risks or concerns, including high DTI if applicable.
 3. Suggest required approval authority (e.g., Branch Manager, Credit Committee).
 4. Provide reasoning in clear human-readable text for audit purposes.
 5. Do NOT decide approve/reject or calculate score.
@@ -40,7 +48,9 @@ Output in structured form:
 
     # Call DeepSeek-R1:8B via Ollama
     response = ollama.chat(
-        model="deepseek-r1:8b", messages=[{"role": "user", "content": prompt}]
+        model="deepseek-r1:8b",
+        messages=[{"role": "user", "content": prompt}],
+        options={"temperature": 0.2},
     )
     return response["message"]["content"]
 

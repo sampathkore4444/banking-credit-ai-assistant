@@ -43,6 +43,9 @@ if submitted:
         "past_defaults": past_defaults,
     }
 
+    # Calculate DTI for display
+    dti = round((total_monthly_debt / (monthly_income or 1)) * 100, 2)
+
     with st.spinner("Generating policy analysis..."):
         deepseek_text = generate_policy_advice(application, policy_text)
         result = parse_deepseek_output(deepseek_text)
@@ -51,6 +54,8 @@ if submitted:
     # Dashboard Cards
     # ---------------------------
     st.subheader("Policy Interpretation & Risk Dashboard")
+
+    st.markdown(f"**Debt-to-Income (DTI): {dti}%**")
 
     col1, col2 = st.columns(2)
 
