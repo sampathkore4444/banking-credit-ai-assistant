@@ -37,13 +37,15 @@ Tasks:
 2. Flag risks or concerns, including high DTI if applicable.
 3. Suggest required approval authority (e.g., Branch Manager, Credit Committee).
 4. Provide reasoning in clear human-readable text for audit purposes.
-5. Do NOT decide approve/reject or calculate score.
+5. Suggest a final recommendation: Approve / Reject / Think More.
+   - Only suggest based on policy and risk, but do NOT enforce a decision.
 
 Output in structured form:
 - Exceptions:
 - Risks:
 - Required Approval:
 - Explanation:
+- Suggested Decision:
 """
 
     # Call DeepSeek-R1:8B via Ollama
@@ -59,7 +61,13 @@ def parse_deepseek_output(text):
     """
     Parse DeepSeek structured output into a dictionary
     """
-    result = {"Exceptions": "", "Risks": "", "Required Approval": "", "Explanation": ""}
+    result = {
+        "Exceptions": "",
+        "Risks": "",
+        "Required Approval": "",
+        "Explanation": "",
+        "Suggested Decision": "",
+    }
     for key in result.keys():
         pattern = rf"{key}:(.*?)(?:- [A-Z]|$)"
         match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
