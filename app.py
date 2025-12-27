@@ -1,5 +1,6 @@
 # app.py
 import streamlit as st
+import pandas as pd
 from credit_assistant_core import generate_policy_advice, parse_deepseek_output
 
 st.set_page_config(page_title="Credit Policy Interpretation Assistant", layout="wide")
@@ -57,6 +58,23 @@ if submitted:
 
     st.markdown(f"**Debt-to-Income (DTI): {dti}%**")
 
+    # ---------------------------
+    # Risk Color Coding
+    # ---------------------------
+    if dti > 40:
+        st.markdown(
+            "<div style='color:red'>High DTI – High risk</div>", unsafe_allow_html=True
+        )
+    elif 30 <= dti <= 40:
+        st.markdown(
+            "<div style='color:orange'>Moderate DTI – Medium risk</div>",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            "<div style='color:green'>Low DTI – Low risk</div>", unsafe_allow_html=True
+        )
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -98,6 +116,37 @@ if submitted:
         st.error(decision)
     else:
         st.warning(decision)  # Think More / Escalate
+
+    st.markdown(f"**Risk Score:** {result.get('Risk Score', 'N/A')} / 100")
+
+    # ---------------------------
+    # Export Audit Summary
+    # ---------------------------
+    export_data = {
+        "Name": [name],
+        "Loan Amount": [loan_amount],
+        "Term (Months)": [term_months],
+        "Monthly Income": [monthly_income],
+        "Total Monthly Debt": [total_monthly_debt],
+        "DTI %": [dti],
+        "Credit Score": [credit_score],
+        "Collateral": [collateral],
+        "Past Defaults": [past_defaults],
+        "Exceptions": [result.get("Exceptions")],
+        "Risks": [result.get("Risks")],
+        "Required Approval": [result.get("Required Approval")],
+        "Suggested Decision": [result.get("Suggested Decision")],
+        "Risk Score": [result.get("Risk Score")],
+        "Explanation": [result.get("Explanation")],
+    }
+    df_export = pd.DataFrame(export_data)
+
+    st.download_button(
+        label="Download Audit Summary (CSV)",
+        data=df_export.to_csv(index=False),
+        file_name=f"audit_summary_{name.replace(' ', '_')}.csv",
+        mime="text/csv",
+    )
 
     # Full raw DeepSeek output (optional)
     with st.expander("Raw DeepSeek Output"):
