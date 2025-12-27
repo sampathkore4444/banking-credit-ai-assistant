@@ -37,7 +37,7 @@ Tasks:
 2. Flag risks or concerns, including high DTI if applicable.
 3. Suggest required approval authority (e.g., Branch Manager, Credit Committee).
 4. Provide reasoning in clear human-readable text for audit purposes.
-5. Suggest a final recommendation: Approve / Reject / Think More.
+5. Suggest a final recommendation: Approve / Reject / Needs further review.
    - Only suggest based on policy and risk, but do NOT enforce a decision.
 
 Output in structured form:
